@@ -3,7 +3,7 @@ package uniswapv3_universal_router_decoder_go
 import (
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/uniswapv3-go/uniswapv3-universal-router-decoder-go/command"
-	"github.com/uniswapv3-go/uniswapv3-universal-router-decoder-go/contracts"
+	"github.com/uniswapv3-go/uniswapv3-universal-router-decoder-go/uniswap"
 	"math/big"
 	"strings"
 )
@@ -15,7 +15,7 @@ type Params struct {
 }
 
 func Decode(data []byte) ([]command.Command, error) {
-	urAbi, err := abi.JSON(strings.NewReader(contracts.UniversalRouterMetaData.ABI))
+	urAbi, err := abi.JSON(strings.NewReader(uniswap.UniversalRouterMetaData.ABI))
 	if err != nil {
 		return nil, err
 	}

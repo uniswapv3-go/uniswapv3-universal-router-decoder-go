@@ -1,9 +1,11 @@
 package uniswapv3_universal_router_decoder_go
 
 import (
+	"encoding/json"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/stretchr/testify/require"
 	"github.com/uniswapv3-go/uniswapv3-universal-router-decoder-go/command"
+	v3 "github.com/uniswapv3-go/uniswapv3-universal-router-decoder-go/uniswap/v3"
 	"testing"
 )
 
@@ -20,7 +22,26 @@ func TestDecode2(t *testing.T) {
 		require.NoError(t, err)
 		for j, cc := range cs {
 			t.Logf("[%d][%d] command: %x => %s", i, j, cc.Command, command.RealCommandName(cc.Command))
-
+			t.Logf("%d inputs", len(cc.Input))
+			//for k, p := range cc.Input {
+			//	t.Logf("[%d][%d][%d] input: %s", i, j, k, string(p))
+			//}
+			switch command.RealCommand(cc.Command) {
+			case command.V3_SWAP_EXACT_IN:
+				var params v3.SwapRouterExactInputParams
+				err = v3.UnpackV3SwapExactIn(&params, cc.Input)
+				require.NoError(t, err)
+				b, err := json.MarshalIndent(params, "", "  ")
+				require.NoError(t, err)
+				t.Logf("%s", string(b))
+			case command.V3_SWAP_EXACT_OUT:
+				var params v3.SwapRouterExactOutputParams
+				err = v3.UnpackV3SwapExactOut(&params, cc.Input)
+				require.NoError(t, err)
+				b, err := json.MarshalIndent(params, "", "  ")
+				require.NoError(t, err)
+				t.Logf("%s", string(b))
+			}
 		}
 	}
 }
